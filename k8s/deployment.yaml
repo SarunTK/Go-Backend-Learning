@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go101-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: go101-api
+  template:
+    metadata:
+      labels:
+        app: go101-api
+    spec:
+      containers:
+        - name: go101-api
+          image: go101-api:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: ":8080"
+            - name: DATABASE_URL
+              value: postgres://postgres:postgres@postgres:5432/go101
+            - name: GRPC_PORT
+              value: ":9090"
+            - name: JWT_SECRET
+              value: super-secret-key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go101-api
+spec:
+  selector:
+    app: go101-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
