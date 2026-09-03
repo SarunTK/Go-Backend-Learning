@@ -1,0 +1,22 @@
+# VCS
+.git
+.gitignore
+
+# Local env
+.env
+.env.*
+!.env.example
+
+# Build artifacts
+bin/
+*.exe
+*.test
+coverage.out
+
+# Editor files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

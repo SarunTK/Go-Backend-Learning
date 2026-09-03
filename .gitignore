@@ -1,7 +1,7 @@
 # Environment files
 .env
 .env.*
-!.env
+!.env.example
 
 # Go build artifacts
 /bin/

@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: go101-postgres
+    environment:
+      POSTGRES_DB: go101
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d go101"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go101-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: :8080
+      GRPC_PORT: :9090
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/go101
+      JWT_SECRET: super-secret-key
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
